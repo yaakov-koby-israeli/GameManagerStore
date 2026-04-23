@@ -20,8 +20,38 @@ A full-stack app to browse and manage a video game catalog, with a REST API back
 
 ```
 GameManagerStore/
-├── GameStore.Api/        # ASP.NET Core 10 Minimal API (SQLite via EF Core)
-└── GameStore.React/      # Vite + React 19 frontend
+├── GameStore.Api/                     # ASP.NET Core 10 Minimal API
+│   ├── Data/                          # DbContext, migrations, seeding
+│   ├── Dtos/                          # Request/response DTOs
+│   ├── Endpoints/                     # Minimal API route handlers
+│   ├── Models/                        # Game and Genre entities
+│   ├── Properties/                    # Launch profiles (dev ports)
+│   ├── appsettings.json               # Connection string, CORS origins
+│   ├── games.http                     # Sample requests (REST Client)
+│   ├── GameStore.Api.csproj           # Project file and dependencies
+│   └── Program.cs                     # App entry, middleware, DI setup
+│
+├── GameStore.React/                   # Vite + React 19 frontend
+│   ├── design-refs/                   # UI reference screenshots
+│   ├── docs/                          # Dev session notes
+│   ├── public/                        # Static assets served at root
+│   ├── src/
+│   │   ├── app/                       # App shell, providers, router
+│   │   ├── assets/                    # Static images
+│   │   ├── components/                # shadcn/ui component primitives
+│   │   ├── features/                  # Domain feature modules
+│   │   ├── lib/                       # Shared utilities (cn())
+│   │   ├── shared/                    # Generic API client
+│   │   └── index.css                  # Tailwind CSS directives
+│   ├── components.json                # shadcn/ui CLI config
+│   ├── eslint.config.js               # ESLint configuration
+│   ├── index.html                     # HTML shell, refs src/app/main.tsx
+│   ├── package.json                   # Dependencies and scripts
+│   ├── tsconfig.json                  # TypeScript config
+│   └── vite.config.ts                 # Vite + Tailwind + path aliases
+│
+├── GameStore.slnx                     # Visual Studio solution file
+└── README.md                          # This file
 ```
 
 ## 📋 Prerequisites
