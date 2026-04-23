@@ -1,0 +1,32 @@
+GET http://localhost:5090/games
+
+###
+GET http://localhost:5090/games/3
+
+###
+ POST http://localhost:5090/games
+ Content-Type: application/json
+
+ {
+   "name": "test",
+   "genreId": 1,
+   "price": 9.99,
+   "releaseDate": "1991-10-20"
+ }
+
+###
+ PUT http://localhost:5090/games/2
+ Content-Type: application/json
+
+ {
+   "name": "Street Fighter I Turbo",
+   "genreId": 1,
+   "price": 19.99,
+   "releaseDate": "1991-10-20"
+ }
+
+###
+ DELETE http://localhost:5090/games/3
+
+###
+ GET http://localhost:5090/genres

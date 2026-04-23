@@ -1,0 +1,61 @@
+# =========================
+# Build Artifacts
+# =========================
+[Bb]in/
+[Oo]bj/
+[Ll]ogs/
+
+# =========================
+# Local Databases
+# =========================
+*.db
+*.db-shm
+*.db-wal
+GameStore.db
+
+# =========================
+# IDE & Editor Files
+# =========================
+.vs/
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+*.user
+*.suo
+
+# =========================
+# Environment & Secrets
+# =========================
+appsettings.local.json
+appsettings.*.local.json
+
+# =========================
+# Publish Output
+# =========================
+publish/
+[Pp]ublish/
+
+# =========================
+# NuGet
+# =========================
+*.nupkg
+*.snupkg
+
+# =========================
+# Test Results
+# =========================
+[Tt]est[Rr]esults/
+
+# =========================
+# Environment Files
+# =========================
+.env
+.env.*
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
