@@ -8,7 +8,7 @@ export function AdminLayout() {
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const el = layoutRef.current;
     if (!el) return;
-    // clientX/Y are already viewport-relative, matching the fixed spotlight.
+    // clientX/Y are viewport-relative, matching the fixed spotlight element.
     el.style.setProperty('--x', `${e.clientX}px`);
     el.style.setProperty('--y', `${e.clientY}px`);
   }, []);
@@ -16,7 +16,7 @@ export function AdminLayout() {
   const handleMouseLeave = useCallback(() => {
     const el = layoutRef.current;
     if (!el) return;
-    // Move gradient off-screen so it doesn't freeze visibly in the corner.
+    // Park the gradient off-screen so it doesn't freeze visibly when the cursor exits.
     el.style.setProperty('--x', '-9999px');
     el.style.setProperty('--y', '-9999px');
   }, []);
@@ -24,10 +24,8 @@ export function AdminLayout() {
   return (
     <div ref={layoutRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} className="min-h-screen">
       {/*
-        Fixed + inset-0 → always covers the full viewport, never clipped by any
-        scrolling container or local stacking context.
-        z-[-1]           → sits behind every page element in the root stacking context.
-        pointer-events-none → cursor/click events pass through unobstructed.
+        Spotlight — fixed + inset-0 covers the full viewport at all times.
+        z-[-1] keeps it behind every page element in the root stacking context.
       */}
       <div
         aria-hidden
@@ -37,7 +35,31 @@ export function AdminLayout() {
             'radial-gradient(200px circle at var(--x, 0px) var(--y, 0px), rgba(168, 85, 247, 0.25) 0%, rgba(59, 130, 246, 0.1) 40%, transparent 80%)',
         }}
       />
-      <Outlet />
+
+      {/*
+        Navbar — fixed so it persists on scroll.
+        z-50 places it above the spotlight (z-[-1]) and all page content.
+        backdrop-blur-md + bg-card/80 creates the glassy dark panel; the
+        spotlight glow is visible bleeding through the translucent background.
+        border-b + drop-shadow form the neon purple line at the bottom edge.
+      */}
+      <header className={[
+        'fixed top-0 inset-x-0 z-50 h-14',
+        'flex items-center px-6',
+        'bg-card/80 backdrop-blur-md',
+        'border-b border-[#a855f7]/40',
+        'shadow-[0_4px_20px_rgba(168,85,247,0.3)]',
+      ].join(' ')}>
+        {/* Logo */}
+        <span className="text-lg font-bold tracking-tight bg-gradient-to-r from-[#a855f7] to-[#06b6d4] bg-clip-text text-transparent select-none">
+          GameStore Admin
+        </span>
+      </header>
+
+      {/* pt-14 offsets the fixed navbar (h-14 = 56px) so content is never hidden behind it */}
+      <main className="pt-14">
+        <Outlet />
+      </main>
     </div>
   );
 }
