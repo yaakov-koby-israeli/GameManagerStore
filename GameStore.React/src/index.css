@@ -55,59 +55,72 @@
     --color-chart-4: var(--chart-4);
     --color-chart-5: var(--chart-5);
 
-    /* Admin semantic utilities (bg-surface-subtle, bg-destructive-subtle, …) */
+    /* Admin semantic utilities */
     --color-surface-subtle: var(--gs-surface-subtle);
     --color-destructive-subtle: var(--gs-danger-red-subtle);
     --color-success-green: var(--gs-success-green);
     --color-success-green-subtle: var(--gs-success-green-subtle);
     --color-warning-amber: var(--gs-warning-amber);
     --color-warning-amber-subtle: var(--gs-warning-amber-subtle);
+    /* Neon accent utilities */
+    --color-accent-purple: var(--gs-accent-purple);
+    --color-accent-purple-subtle: var(--gs-accent-purple-subtle);
+    --color-accent-blue-neon: var(--gs-accent-blue);
+    --color-accent-blue-subtle: var(--gs-accent-blue-subtle);
 }
 
-/* ─── Light theme (default) ──────────────────────────────────────────────── */
+/* ─── Dark Neon theme (default) ──────────────────────────────────────────── */
 :root {
     /* Admin design tokens — gs prefix avoids collisions with shadcn vars */
 
-    /* Surfaces */
-    --gs-background:          #f8fafc;   /* slate-50  — slightly cool off-white */
-    --gs-surface:             #ffffff;   /* pure white cards pop against bg      */
-    --gs-surface-subtle:      #f1f5f9;   /* slate-100 — table headers, muted     */
+    /* Surfaces — deep blue-black with a subtle purple cast */
+    --gs-background:          #0c0c14;   /* dark950 — near-black page bg           */
+    --gs-surface:             #12121e;   /* dark900 — card / panel surface         */
+    --gs-surface-subtle:      #1c1c2e;   /* dark800 — table headers, muted sections */
 
     /* Borders */
-    --gs-border:              #e2e8f0;   /* slate-200 — crisp, subtle            */
-    --gs-border-strong:       #cbd5e1;   /* slate-300 — focused / stronger       */
+    --gs-border:              #22223a;   /* dark700 */
+    --gs-border-strong:       #2e2e4e;   /* dark600 */
 
-    /* Text */
-    --gs-text-primary:        #0f172a;   /* slate-900 */
-    --gs-text-secondary:      #475569;   /* slate-600 */
-    --gs-text-muted:          #94a3b8;   /* slate-400 — placeholders, hints      */
+    /* Text (light on dark) */
+    --gs-text-primary:        #f8fafc;   /* slate-50  — near-white for high contrast */
+    --gs-text-secondary:      #cbd5e1;   /* slate-300 */
+    --gs-text-muted:          #64748b;   /* slate-500 — placeholders, hints          */
     --gs-text-on-accent:      #ffffff;
 
-    /* Accent — blue (primary actions, focus rings) */
-    --gs-accent-blue:         #3b82f6;   /* blue-500 */
-    --gs-accent-blue-hover:   #2563eb;   /* blue-600 */
-    --gs-accent-blue-fg:      #ffffff;
-    --gs-accent-blue-subtle:  #eff6ff;   /* blue-50  — row hover, chip bg        */
-    --gs-accent-blue-border:  #dbeafe;   /* blue-100 */
-    --gs-accent-blue-muted-fg:#1d4ed8;   /* blue-700 — text on blue-50 bg        */
+    /* Neon Purple — primary accent (CTA buttons, focus rings, row hover) */
+    --gs-accent-purple:           #a855f7;                  /* neonPurple500 */
+    --gs-accent-purple-hover:     #c084fc;                  /* neonPurple400 */
+    --gs-accent-purple-fg:        #ffffff;
+    --gs-accent-purple-subtle:    rgb(168 85 247 / 0.12);   /* translucent hover tint */
+    --gs-accent-purple-border:    rgb(168 85 247 / 0.30);
+    --gs-accent-purple-muted-fg:  #d8b4fe;                  /* neonPurple300 — on subtle bg */
 
-    /* Danger — red (destructive actions, error states) */
-    --gs-danger-red:          #ef4444;   /* red-500 */
-    --gs-danger-red-hover:    #dc2626;   /* red-600 */
+    /* Neon Blue / Cyan — secondary accent (info, data, secondary actions) */
+    --gs-accent-blue:             #06b6d4;                  /* neonBlue500  */
+    --gs-accent-blue-hover:       #22d3ee;                  /* neonBlue400  */
+    --gs-accent-blue-fg:          #ffffff;
+    --gs-accent-blue-subtle:      rgb(6 182 212 / 0.12);
+    --gs-accent-blue-border:      rgb(6 182 212 / 0.30);
+    --gs-accent-blue-muted-fg:    #67e8f9;                  /* neonBlue300  */
+
+    /* Danger (brighter reds on dark bg) */
+    --gs-danger-red:          #f87171;                  /* red-400 */
+    --gs-danger-red-hover:    #ef4444;                  /* red-500 */
     --gs-danger-red-fg:       #ffffff;
-    --gs-danger-red-subtle:   #fef2f2;   /* red-50  */
-    --gs-danger-red-border:   #fee2e2;   /* red-100 */
+    --gs-danger-red-subtle:   rgb(248 113 113 / 0.12);
+    --gs-danger-red-border:   rgb(248 113 113 / 0.25);
 
     /* Success */
-    --gs-success-green:       #22c55e;   /* green-500 */
-    --gs-success-green-subtle:#f0fdf4;   /* green-50  */
+    --gs-success-green:       #4ade80;                  /* green-400 */
+    --gs-success-green-subtle:rgb(74 222 128 / 0.12);
 
     /* Warning */
-    --gs-warning-amber:       #f59e0b;   /* amber-500 */
-    --gs-warning-amber-subtle:#fffbeb;   /* amber-50  */
+    --gs-warning-amber:       #fbbf24;                  /* amber-400 */
+    --gs-warning-amber-subtle:rgb(251 191 36 / 0.12);
 
-    /* Focus ring */
-    --gs-focus-ring:          #93c5fd;   /* blue-300 */
+    /* Focus ring — neon purple glow */
+    --gs-focus-ring:          #c084fc;                  /* neonPurple400 */
 
     /* ── shadcn variable bindings — point to admin tokens above ─────────── */
     --background:               var(--gs-background);
@@ -116,71 +129,67 @@
     --card-foreground:          var(--gs-text-primary);
     --popover:                  var(--gs-surface);
     --popover-foreground:       var(--gs-text-primary);
-    --primary:                  var(--gs-accent-blue);
-    --primary-foreground:       var(--gs-accent-blue-fg);
+    --primary:                  var(--gs-accent-purple);       /* neon purple CTA */
+    --primary-foreground:       var(--gs-accent-purple-fg);
     --secondary:                var(--gs-surface-subtle);
     --secondary-foreground:     var(--gs-text-primary);
     --muted:                    var(--gs-surface-subtle);
     --muted-foreground:         var(--gs-text-secondary);
-    --accent:                   var(--gs-accent-blue-subtle);
-    --accent-foreground:        var(--gs-accent-blue-muted-fg);
+    --accent:                   var(--gs-accent-purple-subtle); /* neon purple row hover */
+    --accent-foreground:        var(--gs-accent-purple-muted-fg);
     --destructive:              var(--gs-danger-red);
     --border:                   var(--gs-border);
     --input:                    var(--gs-border);
     --ring:                     var(--gs-focus-ring);
-    --radius:                   0.5rem;   /* 8px — cards & inputs */
+    --radius:                   0.5rem;
 
-    /* sidebar */
-    --sidebar:                  var(--gs-surface);
-    --sidebar-foreground:       var(--gs-text-primary);
-    --sidebar-primary:          var(--gs-accent-blue);
+    /* sidebar — neon blue for visual contrast against purple primary */
+    --sidebar:                    var(--gs-surface);
+    --sidebar-foreground:         var(--gs-text-primary);
+    --sidebar-primary:            var(--gs-accent-blue);
     --sidebar-primary-foreground: var(--gs-accent-blue-fg);
-    --sidebar-accent:           var(--gs-accent-blue-subtle);
-    --sidebar-accent-foreground:var(--gs-accent-blue-muted-fg);
-    --sidebar-border:           var(--gs-border);
-    --sidebar-ring:             var(--gs-focus-ring);
+    --sidebar-accent:             var(--gs-accent-blue-subtle);
+    --sidebar-accent-foreground:  var(--gs-accent-blue-muted-fg);
+    --sidebar-border:             var(--gs-border);
+    --sidebar-ring:               var(--gs-focus-ring);
 
-    /* chart — semantic multi-color palette */
-    --chart-1: #3b82f6;   /* blue   */
-    --chart-2: #22c55e;   /* green  */
-    --chart-3: #f59e0b;   /* amber  */
-    --chart-4: #ef4444;   /* red    */
-    --chart-5: #8b5cf6;   /* violet */
+    /* chart — neon palette */
+    --chart-1: #a855f7;   /* neon purple */
+    --chart-2: #06b6d4;   /* neon cyan   */
+    --chart-3: #fbbf24;   /* amber       */
+    --chart-4: #f87171;   /* red         */
+    --chart-5: #4ade80;   /* green       */
 }
 
-/* ─── Dark theme ─────────────────────────────────────────────────────────── */
+/* ─── .dark override — mirrors :root (this is already a dark-only theme) ─── */
 .dark {
-    /* Override only the gs tokens; shadcn bindings inherit automatically */
-
-    --gs-background:          #0f172a;   /* slate-900 */
-    --gs-surface:             #1e293b;   /* slate-800 */
-    --gs-surface-subtle:      #334155;   /* slate-700 */
-
-    --gs-border:              rgb(255 255 255 / 0.10);
-    --gs-border-strong:       rgb(255 255 255 / 0.20);
-
-    --gs-text-primary:        #f8fafc;   /* slate-50  */
-    --gs-text-secondary:      #94a3b8;   /* slate-400 */
-    --gs-text-muted:          #64748b;   /* slate-500 */
-
-    --gs-accent-blue:         #60a5fa;   /* blue-400 — lighter for dark bg */
-    --gs-accent-blue-hover:   #3b82f6;
-    --gs-accent-blue-subtle:  rgb(96 165 250 / 0.15);
-    --gs-accent-blue-border:  rgb(96 165 250 / 0.25);
-    --gs-accent-blue-muted-fg:#93c5fd;   /* blue-300 */
-
-    --gs-danger-red:          #f87171;   /* red-400  */
+    --gs-background:          #0c0c14;
+    --gs-surface:             #12121e;
+    --gs-surface-subtle:      #1c1c2e;
+    --gs-border:              #22223a;
+    --gs-border-strong:       #2e2e4e;
+    --gs-text-primary:        #f8fafc;
+    --gs-text-secondary:      #cbd5e1;
+    --gs-text-muted:          #64748b;
+    --gs-accent-purple:           #a855f7;
+    --gs-accent-purple-hover:     #c084fc;
+    --gs-accent-purple-subtle:    rgb(168 85 247 / 0.12);
+    --gs-accent-purple-border:    rgb(168 85 247 / 0.30);
+    --gs-accent-purple-muted-fg:  #d8b4fe;
+    --gs-accent-blue:             #06b6d4;
+    --gs-accent-blue-hover:       #22d3ee;
+    --gs-accent-blue-subtle:      rgb(6 182 212 / 0.12);
+    --gs-accent-blue-border:      rgb(6 182 212 / 0.30);
+    --gs-accent-blue-muted-fg:    #67e8f9;
+    --gs-danger-red:          #f87171;
     --gs-danger-red-hover:    #ef4444;
-    --gs-danger-red-subtle:   rgb(248 113 113 / 0.15);
+    --gs-danger-red-subtle:   rgb(248 113 113 / 0.12);
     --gs-danger-red-border:   rgb(248 113 113 / 0.25);
-
-    --gs-success-green:       #4ade80;   /* green-400 */
-    --gs-success-green-subtle:rgb(74 222 128 / 0.15);
-
-    --gs-warning-amber:       #fbbf24;   /* amber-400 */
-    --gs-warning-amber-subtle:rgb(251 191 36 / 0.15);
-
-    --gs-focus-ring:          #60a5fa;   /* blue-400 */
+    --gs-success-green:       #4ade80;
+    --gs-success-green-subtle:rgb(74 222 128 / 0.12);
+    --gs-warning-amber:       #fbbf24;
+    --gs-warning-amber-subtle:rgb(251 191 36 / 0.12);
+    --gs-focus-ring:          #c084fc;
 }
 
 /* ─── Base layer ─────────────────────────────────────────────────────────── */

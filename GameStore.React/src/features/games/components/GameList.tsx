@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Table,
   TableBody,
@@ -24,44 +24,62 @@ const formatDate = (dateStr: string) => {
 
 interface GameListProps {
   games: GameSummaryDto[];
+  hasActiveFilters: boolean;
 }
 
-export function GameList({ games }: GameListProps) {
+export function GameList({ games, hasActiveFilters }: GameListProps) {
+  const navigate = useNavigate();
+
   if (games.length === 0) {
     return (
       <div className="py-16 text-center text-sm text-muted-foreground">
-        No games yet.{' '}
-        <Link to="/games/new" className="underline underline-offset-4 hover:text-foreground">
-          Add the first one.
-        </Link>
+        {hasActiveFilters ? (
+          'No games match your filters.'
+        ) : (
+          <>
+            No games yet.{' '}
+            <Link to="/games/new" className="underline underline-offset-4 hover:text-foreground">
+              Add the first one.
+            </Link>
+          </>
+        )}
       </div>
     );
   }
 
   return (
     <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="pl-4">Name</TableHead>
-          <TableHead>Genre</TableHead>
-          <TableHead>Price</TableHead>
-          <TableHead>Release Date</TableHead>
+      <TableHeader className="sticky top-0 z-10 bg-surface-subtle">
+        <TableRow className="border-b hover:bg-transparent">
+          <TableHead className="pl-4 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Name
+          </TableHead>
+          <TableHead className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Genre
+          </TableHead>
+          <TableHead className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Price
+          </TableHead>
+          <TableHead className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Release Date
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {games.map((game) => (
-          <TableRow key={game.id}>
-            <TableCell className="pl-4">
-              <Link
-                to={`/games/${game.id}`}
-                className="font-medium hover:underline"
-              >
-                {game.name}
-              </Link>
+          <TableRow
+            key={game.id}
+            onClick={() => navigate(`/games/${game.id}`)}
+            className="cursor-pointer hover:bg-accent"
+          >
+            <TableCell className="py-3.5 pl-4">
+              <span className="font-medium text-foreground">{game.name}</span>
             </TableCell>
-            <TableCell className="text-muted-foreground">{game.genre}</TableCell>
-            <TableCell>{formatPrice(game.price)}</TableCell>
-            <TableCell className="text-muted-foreground">{formatDate(game.releaseDate)}</TableCell>
+            <TableCell className="py-3.5 text-muted-foreground">{game.genre}</TableCell>
+            <TableCell className="py-3.5 tabular-nums">{formatPrice(game.price)}</TableCell>
+            <TableCell className="py-3.5 text-muted-foreground">
+              {formatDate(game.releaseDate)}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

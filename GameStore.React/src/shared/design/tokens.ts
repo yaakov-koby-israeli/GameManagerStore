@@ -4,49 +4,44 @@
 // ─── Primitive palette ────────────────────────────────────────────────────────
 
 export const palette = {
-  white:    '#ffffff',
+  white: '#ffffff',
 
-  // Slate (neutral scale)
+  // Dark surfaces (deep blue-black with a subtle purple cast)
+  dark950: '#0c0c14',   // near-black — page background
+  dark900: '#12121e',   // card surface
+  dark800: '#1c1c2e',   // surfaceSubtle — table headers, muted sections
+  dark700: '#22223a',   // border
+  dark600: '#2e2e4e',   // borderStrong
+
+  // Slate (text scale — light values for dark-bg readability)
   slate50:  '#f8fafc',
   slate100: '#f1f5f9',
   slate200: '#e2e8f0',
   slate300: '#cbd5e1',
   slate400: '#94a3b8',
   slate500: '#64748b',
-  slate600: '#475569',
-  slate700: '#334155',
-  slate800: '#1e293b',
-  slate900: '#0f172a',
 
-  // Blue (primary action / accent)
-  blue50:  '#eff6ff',
-  blue100: '#dbeafe',
-  blue300: '#93c5fd',
-  blue400: '#60a5fa',
-  blue500: '#3b82f6',
-  blue600: '#2563eb',
-  blue700: '#1d4ed8',
+  // Neon Purple (primary accent — CTAs, focus rings, active states)
+  neonPurple300: '#d8b4fe',   // light — text on subtle bg
+  neonPurple400: '#c084fc',   // hover
+  neonPurple500: '#a855f7',   // primary
+  neonPurple600: '#9333ea',   // pressed / active
 
-  // Red (destructive / danger)
-  red50:   '#fef2f2',
-  red100:  '#fee2e2',
-  red400:  '#f87171',
-  red500:  '#ef4444',
-  red600:  '#dc2626',
+  // Neon Blue / Cyan (secondary accent — info, data, secondary actions)
+  neonBlue300: '#67e8f9',   // light
+  neonBlue400: '#22d3ee',   // hover
+  neonBlue500: '#06b6d4',   // primary
+  neonBlue600: '#0891b2',   // pressed
 
-  // Green (success)
-  green50:  '#f0fdf4',
+  // Red (danger — brighter for dark bg)
+  red400: '#f87171',
+  red500: '#ef4444',
+
+  // Green (success — brighter for dark bg)
   green400: '#4ade80',
-  green500: '#22c55e',
-  green600: '#16a34a',
 
-  // Amber (warning)
-  amber50:  '#fffbeb',
+  // Amber (warning — brighter for dark bg)
   amber400: '#fbbf24',
-  amber500: '#f59e0b',
-
-  // Violet (chart / decorative)
-  violet500: '#8b5cf6',
 } as const
 
 export type PaletteKey = keyof typeof palette
@@ -55,46 +50,54 @@ export type PaletteKey = keyof typeof palette
 // Maps conceptual roles to palette values. Use CSS vars (see `cssVars`) in components.
 
 export const colors = {
-  // Page & panel surfaces
-  background:           palette.slate50,    // outermost page bg — slightly cool off-white
-  surface:              palette.white,      // cards, panels — pure white to pop against bg
-  surfaceSubtle:        palette.slate100,   // inner sections, table headers, muted areas
+  // Surfaces
+  background:    palette.dark950,    // near-black page background
+  surface:       palette.dark900,    // card / panel background
+  surfaceSubtle: palette.dark800,    // table headers, inner muted sections
 
   // Borders
-  border:               palette.slate200,   // default dividers, input borders
-  borderStrong:         palette.slate300,   // focused or prominent borders
+  border:        palette.dark700,
+  borderStrong:  palette.dark600,
 
-  // Text
-  textPrimary:          palette.slate900,   // headings, body copy
-  textSecondary:        palette.slate600,   // labels, secondary info
-  textMuted:            palette.slate400,   // placeholders, hints, disabled
-  textOnAccent:         palette.white,      // text on colored backgrounds
+  // Text (light on dark for readability)
+  textPrimary:   palette.slate50,    // near-white — headings, body
+  textSecondary: palette.slate300,   // secondary labels
+  textMuted:     palette.slate500,   // placeholders, hints, disabled
+  textOnAccent:  palette.white,
 
-  // Accent — blue (interactive: primary buttons, links, focus)
-  accentBlue:           palette.blue500,
-  accentBlueHover:      palette.blue600,
+  // Neon Purple — primary accent (CTA buttons, links, focus, row hover)
+  accentPurple:           palette.neonPurple500,
+  accentPurpleHover:      palette.neonPurple400,
+  accentPurpleForeground: palette.white,
+  accentPurpleSubtle:     'rgb(168 85 247 / 0.12)',   // translucent tint for hover / chip bg
+  accentPurpleBorder:     'rgb(168 85 247 / 0.30)',
+  accentPurpleMutedFg:    palette.neonPurple300,      // text sitting on accentPurpleSubtle
+
+  // Neon Blue / Cyan — secondary accent (info, data, secondary actions)
+  accentBlue:           palette.neonBlue500,
+  accentBlueHover:      palette.neonBlue400,
   accentBlueForeground: palette.white,
-  accentBlueSubtle:     palette.blue50,     // hover tint on rows/items
-  accentBlueBorder:     palette.blue100,
-  accentBlueMutedFg:    palette.blue700,    // text on accentBlueSubtle bg
+  accentBlueSubtle:     'rgb(6 182 212 / 0.12)',
+  accentBlueBorder:     'rgb(6 182 212 / 0.30)',
+  accentBlueMutedFg:    palette.neonBlue300,
 
-  // Danger — red (destructive actions, error states)
-  dangerRed:            palette.red500,
-  dangerRedHover:       palette.red600,
+  // Danger (brighter reds on dark bg)
+  dangerRed:            palette.red400,
+  dangerRedHover:       palette.red500,
   dangerRedForeground:  palette.white,
-  dangerRedSubtle:      palette.red50,
-  dangerRedBorder:      palette.red100,
+  dangerRedSubtle:      'rgb(248 113 113 / 0.12)',
+  dangerRedBorder:      'rgb(248 113 113 / 0.25)',
 
   // Success
-  successGreen:         palette.green500,
-  successGreenSubtle:   palette.green50,
+  successGreen:         palette.green400,
+  successGreenSubtle:   'rgb(74 222 128 / 0.12)',
 
   // Warning
-  warningAmber:         palette.amber500,
-  warningAmberSubtle:   palette.amber50,
+  warningAmber:         palette.amber400,
+  warningAmberSubtle:   'rgb(251 191 36 / 0.12)',
 
-  // Focus ring
-  focusRing:            palette.blue300,
+  // Focus ring — neon purple glow
+  focusRing: palette.neonPurple400,
 } as const
 
 // ─── Spacing ──────────────────────────────────────────────────────────────────
@@ -164,27 +167,32 @@ export const shadows = {
 // e.g. `style={{ color: `var(${cssVars.textMuted})` }}`.
 
 export const cssVars = {
-  background:           '--gs-background',
-  surface:              '--gs-surface',
-  surfaceSubtle:        '--gs-surface-subtle',
-  border:               '--gs-border',
-  borderStrong:         '--gs-border-strong',
-  textPrimary:          '--gs-text-primary',
-  textSecondary:        '--gs-text-secondary',
-  textMuted:            '--gs-text-muted',
-  textOnAccent:         '--gs-text-on-accent',
-  accentBlue:           '--gs-accent-blue',
-  accentBlueForeground: '--gs-accent-blue-fg',
-  accentBlueSubtle:     '--gs-accent-blue-subtle',
-  accentBlueBorder:     '--gs-accent-blue-border',
-  accentBlueMutedFg:    '--gs-accent-blue-muted-fg',
-  dangerRed:            '--gs-danger-red',
-  dangerRedForeground:  '--gs-danger-red-fg',
-  dangerRedSubtle:      '--gs-danger-red-subtle',
-  dangerRedBorder:      '--gs-danger-red-border',
-  successGreen:         '--gs-success-green',
-  successGreenSubtle:   '--gs-success-green-subtle',
-  warningAmber:         '--gs-warning-amber',
-  warningAmberSubtle:   '--gs-warning-amber-subtle',
-  focusRing:            '--gs-focus-ring',
+  background:             '--gs-background',
+  surface:                '--gs-surface',
+  surfaceSubtle:          '--gs-surface-subtle',
+  border:                 '--gs-border',
+  borderStrong:           '--gs-border-strong',
+  textPrimary:            '--gs-text-primary',
+  textSecondary:          '--gs-text-secondary',
+  textMuted:              '--gs-text-muted',
+  textOnAccent:           '--gs-text-on-accent',
+  accentPurple:           '--gs-accent-purple',
+  accentPurpleForeground: '--gs-accent-purple-fg',
+  accentPurpleSubtle:     '--gs-accent-purple-subtle',
+  accentPurpleBorder:     '--gs-accent-purple-border',
+  accentPurpleMutedFg:    '--gs-accent-purple-muted-fg',
+  accentBlue:             '--gs-accent-blue',
+  accentBlueForeground:   '--gs-accent-blue-fg',
+  accentBlueSubtle:       '--gs-accent-blue-subtle',
+  accentBlueBorder:       '--gs-accent-blue-border',
+  accentBlueMutedFg:      '--gs-accent-blue-muted-fg',
+  dangerRed:              '--gs-danger-red',
+  dangerRedForeground:    '--gs-danger-red-fg',
+  dangerRedSubtle:        '--gs-danger-red-subtle',
+  dangerRedBorder:        '--gs-danger-red-border',
+  successGreen:           '--gs-success-green',
+  successGreenSubtle:     '--gs-success-green-subtle',
+  warningAmber:           '--gs-warning-amber',
+  warningAmberSubtle:     '--gs-warning-amber-subtle',
+  focusRing:              '--gs-focus-ring',
 } as const satisfies Record<string, `--gs-${string}`>
