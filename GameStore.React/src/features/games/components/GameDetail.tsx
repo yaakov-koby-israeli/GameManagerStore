@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { useGenres } from '@/features/genres';
 import type { GameDetailsDto } from '../types';
 import { DeleteGameButton } from './DeleteGameButton';
@@ -38,7 +39,11 @@ export function GameDetail({ game }: GameDetailProps) {
         <div className="flex gap-2">
           <Link
             to={`/games/${game.id}/edit`}
-            className={buttonVariants({ variant: 'outline' })}
+            className={cn(
+              buttonVariants({ variant: 'ghost' }),
+              'bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary',
+              'focus-visible:border-primary/40 focus-visible:ring-primary/20',
+            )}
           >
             Edit
           </Link>

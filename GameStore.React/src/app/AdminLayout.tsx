@@ -1,5 +1,6 @@
 import { useCallback, useRef } from 'react';
 import { Outlet } from 'react-router-dom';
+import { Toaster } from '@/components/ui/sonner';
 
 export function AdminLayout() {
   // Write --x / --y directly to the DOM — zero React re-renders on mouse move.
@@ -60,6 +61,9 @@ export function AdminLayout() {
       <main className="pt-14">
         <Outlet />
       </main>
+
+      {/* Sonner portals toasts to <body> — placement here is just for co-location */}
+      <Toaster />
     </div>
   );
 }

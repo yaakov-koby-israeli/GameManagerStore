@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { apiClient } from '@/shared/api/client';
 import type { CreateGameDto, GameDetailsDto, GameSummaryDto, UpdateGameDto } from '../types';
 
@@ -23,6 +24,10 @@ export function useCreateGame() {
     mutationFn: (data) => apiClient.post<GameDetailsDto>('/games', data),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['games'] });
+      toast.success('Game created successfully!');
+    },
+    onError: () => {
+      toast.error('Failed to create game.');
     },
   });
 }
@@ -34,6 +39,10 @@ export function useUpdateGame(id: number) {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['games'] });
       void queryClient.invalidateQueries({ queryKey: ['game', id] });
+      toast.success('Game updated successfully!');
+    },
+    onError: () => {
+      toast.error('Failed to update game.');
     },
   });
 }
@@ -45,6 +54,10 @@ export function useDeleteGame() {
     onSuccess: (_data, id) => {
       void queryClient.invalidateQueries({ queryKey: ['games'] });
       queryClient.removeQueries({ queryKey: ['game', id] });
+      toast.success('Game deleted.');
+    },
+    onError: () => {
+      toast.error('Failed to delete game.');
     },
   });
 }

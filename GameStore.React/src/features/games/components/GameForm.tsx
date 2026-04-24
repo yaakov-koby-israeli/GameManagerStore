@@ -72,6 +72,15 @@ export function GameForm({
 }: GameFormProps) {
   const { data: genres = [] } = useGenres();
 
+  // toISOString() is UTC-based and can return yesterday for timezones ahead of
+  // UTC, so we derive today's date from local calendar fields instead.
+  const today = (() => {
+    const d = new Date();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${d.getFullYear()}-${mm}-${dd}`;
+  })();
+
   const {
     register,
     control,
@@ -113,7 +122,13 @@ export function GameForm({
                 className="w-full"
                 aria-invalid={errors.genreId ? true : undefined}
               >
-                <SelectValue placeholder="Select a genre…" />
+                <SelectValue>
+                  {(value: string | null) =>
+                    value
+                      ? (genres.find((g) => String(g.id) === value)?.name ?? value)
+                      : <span className="text-muted-foreground">Select a genre…</span>
+                  }
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {genres.map((genre) => (
@@ -145,6 +160,7 @@ export function GameForm({
         <Input
           id="releaseDate"
           type="date"
+          max={today}
           aria-invalid={errors.releaseDate ? true : undefined}
           {...register('releaseDate')}
         />

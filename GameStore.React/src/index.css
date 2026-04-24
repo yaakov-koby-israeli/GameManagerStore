@@ -203,4 +203,16 @@
   html {
     @apply font-sans;
   }
+  /* Tell the browser to render date/time picker controls in dark mode so the
+     calendar icon uses light colours and remains visible on dark surfaces. */
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="time"] {
+    color-scheme: dark;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+  }
 }
