@@ -1,9 +1,10 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useGenres } from '@/features/genres';
 
 // ---------------------------------------------------------------------------
@@ -53,12 +54,6 @@ function Field({
   );
 }
 
-// Select styled to match shadcn Input appearance
-const selectClass =
-  'h-8 w-full rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm outline-none transition-colors ' +
-  'focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 ' +
-  'aria-[invalid=true]:border-destructive aria-[invalid=true]:ring-3 aria-[invalid=true]:ring-destructive/20';
-
 // ---------------------------------------------------------------------------
 // GameForm — shared by CreateGamePage (blank) and EditGamePage (pre-filled)
 // ---------------------------------------------------------------------------
@@ -79,6 +74,7 @@ export function GameForm({
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<GameFormValues>({
@@ -98,22 +94,37 @@ export function GameForm({
       </Field>
 
       <Field label="Genre" htmlFor="genreId" error={errors.genreId?.message}>
-        {/* setValueAs converts the select's string value → number for Zod */}
-        <select
-          id="genreId"
-          aria-invalid={errors.genreId ? true : undefined}
-          className={selectClass}
-          {...register('genreId', {
-            setValueAs: (v: string) => (v === '' ? NaN : parseInt(v, 10)),
-          })}
-        >
-          <option value="">Select a genre…</option>
-          {genres.map((genre) => (
-            <option key={genre.id} value={genre.id}>
-              {genre.name}
-            </option>
-          ))}
-        </select>
+        {/*
+          Controller bridges RHF (numeric genreId) with the Base UI Select
+          (string values). We stringify on the way in and parse on the way out.
+          Number.isFinite guards against the initial NaN / undefined state so
+          the placeholder shows correctly before the user picks a genre.
+        */}
+        <Controller
+          control={control}
+          name="genreId"
+          render={({ field }) => (
+            <Select
+              value={Number.isFinite(field.value) ? String(field.value) : null}
+              onValueChange={(v) => field.onChange(v != null ? parseInt(v, 10) : NaN)}
+            >
+              <SelectTrigger
+                id="genreId"
+                className="w-full"
+                aria-invalid={errors.genreId ? true : undefined}
+              >
+                <SelectValue placeholder="Select a genre…" />
+              </SelectTrigger>
+              <SelectContent>
+                {genres.map((genre) => (
+                  <SelectItem key={genre.id} value={String(genre.id)}>
+                    {genre.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
       </Field>
 
       <Field label="Price (USD)" htmlFor="price" error={errors.price?.message}>

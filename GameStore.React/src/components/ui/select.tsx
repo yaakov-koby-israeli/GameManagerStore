@@ -22,6 +22,7 @@ function SelectTrigger({
         "hover:border-border-strong hover:bg-secondary",
         "focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
         "aria-expanded:border-primary aria-expanded:ring-3 aria-expanded:ring-ring/50",
+        "aria-[invalid=true]:border-destructive aria-[invalid=true]:ring-3 aria-[invalid=true]:ring-destructive/20",
         "disabled:pointer-events-none disabled:opacity-50",
         className
       )}
