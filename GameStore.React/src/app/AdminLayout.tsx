@@ -62,6 +62,22 @@ export function AdminLayout() {
         <Outlet />
       </main>
 
+      {/*
+        Footer — normal flow (not fixed), scrolls into view at the bottom of
+        long pages. border-t + upward shadow mirrors the navbar's bottom line.
+      */}
+      <footer className={[
+        'flex items-center justify-center px-6 py-4',
+        'bg-background',
+        'border-t border-[#a855f7]/40',
+        'shadow-[0_-4px_20px_rgba(168,85,247,0.3)]',
+      ].join(' ')}>
+        <p className="text-sm text-muted-foreground">
+          © 2026 GameStore Admin. built by{' '}
+          <span className="font-semibold text-primary">koby</span>
+        </p>
+      </footer>
+
       {/* Sonner portals toasts to <body> — placement here is just for co-location */}
       <Toaster />
     </div>
