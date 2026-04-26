@@ -26,6 +26,26 @@ dotnet ef database update
 
 No test project exists yet. The `games.http` file contains sample HTTP requests that can be executed with the VS Code REST Client extension or any HTTP client against `http://localhost:5090`.
 
+## Rules
+
+**Principle:** Boring, obvious code wins. The codebase is a Minimal API — keep it minimal. Resist adding services, repositories, or wrapper layers unless duplication forces it.
+
+1. **Endpoints stay thin.** Endpoint handlers in `Endpoints/*.cs` may use `GameStoreContext` directly via `IGameStoreContext` injection. Do not introduce service classes, repositories, or mediators unless the same logic is duplicated across three or more endpoints.
+
+2. **DTOs in, DTOs out.** Endpoints accept and return DTOs from `Dtos/`, never `Models/` entities. Map between them inline — no AutoMapper, no mapping extension methods unless the mapping is duplicated 3+ times.
+
+3. **Validation lives on DTOs.** Use DataAnnotations (`[Required]`, `[StringLength]`, `[Range]`) on `CreateGameDto` and `UpdateGameDto`. Do not write manual validation inside endpoint handlers — `AddValidation()` handles it globally.
+
+4. **Read paths use `.AsNoTracking()`.** Any GET endpoint that doesn't mutate must call `.AsNoTracking()` on the query.
+
+5. **Prefer `ExecuteDeleteAsync` / `ExecuteUpdateAsync` over load-then-save.** When you only need to delete or update by id, do it in one round-trip without loading the entity.
+
+6. **Migrations are append-only.** Never edit a generated migration file. If a migration is wrong, add a new one that corrects it.
+
+7. **No magic strings for routes or query keys.** Named routes (e.g. `GetGameById`) must be referenced by name, not by re-typing the literal string elsewhere.
+
+8. **One endpoint group per resource file.** Games endpoints live in `GamesEndPoints.cs`, genres in `GenresEndpoints.cs`. New resources (e.g. `Publishers`) get their own file with a `MapPublishersEndpoints` extension method registered in `Program.cs`.
+
 ## Architecture
 
 ASP.NET Core 10 Minimal API backed by **SQLite via Entity Framework Core 10**.
@@ -41,20 +61,20 @@ ASP.NET Core 10 Minimal API backed by **SQLite via Entity Framework Core 10**.
 
 ### Models (`Models/`)
 
-| Class   | Key properties |
-|---------|----------------|
+| Class   | Key properties                                                       |
+| ------- | -------------------------------------------------------------------- |
 | `Game`  | `Id`, `Name`, `GenreId` (FK), `Genre?` (nav), `Price`, `ReleaseDate` |
-| `Genre` | `Id`, `Name` |
+| `Genre` | `Id`, `Name`                                                         |
 
 ### DTOs (`Dtos/`)
 
-| Record            | Purpose |
-|-------------------|---------|
-| `GameSummaryDto`  | List response — includes resolved `Genre` name (string) |
-| `GameDetailsDto`  | Single-item response — uses `GenreId` (int) |
-| `CreateGameDto`   | POST body — has DataAnnotations validation (`[Required]`, `[StringLength]`, `[Range]`) |
-| `UpdateGameDto`   | PUT body — same shape as `CreateGameDto`, no `Id` |
-| `GenreDto`        | Genre list response |
+| Record           | Purpose                                                                                |
+| ---------------- | -------------------------------------------------------------------------------------- |
+| `GameSummaryDto` | List response — includes resolved `Genre` name (string)                                |
+| `GameDetailsDto` | Single-item response — uses `GenreId` (int)                                            |
+| `CreateGameDto`  | POST body — has DataAnnotations validation (`[Required]`, `[StringLength]`, `[Range]`) |
+| `UpdateGameDto`  | PUT body — same shape as `CreateGameDto`, no `Id`                                      |
+| `GenreDto`       | Genre list response                                                                    |
 
 Validation is enabled globally via `builder.Services.AddValidation()`.
 
@@ -62,16 +82,16 @@ Validation is enabled globally via `builder.Services.AddValidation()`.
 
 **`GamesEndPoints`** (`/games`) — extension method `MapGamesEndPoints`:
 
-| Verb   | Route        | Notes |
-|--------|--------------|-------|
-| GET    | `/games`     | Joins `Genre` via `.Include`, projects to `GameSummaryDto`, uses `.AsNoTracking()` |
-| GET    | `/games/{id}`| `FindAsync` by id, returns `GameDetailsDto`; named route `GetGameById` |
-| POST   | `/games`     | Inserts new `Game`, returns `201 CreatedAtRoute` with `GameDetailsDto` |
-| PUT    | `/games/{id}`| Updates fields + `SaveChangesAsync`, returns `204` |
-| DELETE | `/games/{id}`| `ExecuteDeleteAsync` (no load needed), returns `204` |
+| Verb   | Route         | Notes                                                                              |
+| ------ | ------------- | ---------------------------------------------------------------------------------- |
+| GET    | `/games`      | Joins `Genre` via `.Include`, projects to `GameSummaryDto`, uses `.AsNoTracking()` |
+| GET    | `/games/{id}` | `FindAsync` by id, returns `GameDetailsDto`; named route `GetGameById`             |
+| POST   | `/games`      | Inserts new `Game`, returns `201 CreatedAtRoute` with `GameDetailsDto`             |
+| PUT    | `/games/{id}` | Updates fields + `SaveChangesAsync`, returns `204`                                 |
+| DELETE | `/games/{id}` | `ExecuteDeleteAsync` (no load needed), returns `204`                               |
 
 **`GenresEndpoints`** (`/genres`) — extension method `MapGenresEndpoints`:
 
-| Verb | Route     | Notes |
-|------|-----------|-------|
+| Verb | Route     | Notes                                                     |
+| ---- | --------- | --------------------------------------------------------- |
 | GET  | `/genres` | Projects all genres to `GenreDto`, uses `.AsNoTracking()` |
