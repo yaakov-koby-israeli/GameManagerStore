@@ -26,10 +26,30 @@ We use a feature-based architecture:
 ## Rules
 
 1. Use TypeScript strict mode. No `any` without a comment.
+
 2. Loose Coupling: Features can import from `shared/` freely, but NEVER from another feature directly — only through that feature's `index.ts` barrel.
+
 3. No business logic in components. Components are presentational unless explicitly a container.
+
 4. API calls live ONLY inside `features/*/api/`.
-5. Execution Flow: Execute ONLY one phase at a time from SPEC.md. NEVER proceed to the next phase automatically. End every phase by running the verification commands (e.g., `npm run dev`, `npm run lint`) and wait for the user's explicit approval.
+
+5. End every phase by running the verification commands (e.g., `npm run dev`, `npm run lint`) and wait for the user's explicit approval.
+
+6. **Single Responsibility per file.** Each file has one job, stated in one sentence. If you can't describe a file's purpose without "and," split it.
+   - API hooks go in `features/*/api/*.ts` — no UI, no form logic.
+   - Form schemas go in `features/*/schemas.ts` (or colocated with the form that uses them) — no API calls.
+   - Types go in `features/*/types.ts` — no runtime code.
+   - Components render UI and wire callbacks — they do not fetch, mutate, or validate.
+
+7. **Depend on types and contracts, not on other features' internals.** A feature may import from another feature ONLY through its `index.ts` barrel, and only types or public hooks — never components from deep paths, never utilities marked internal. If you need something from another feature that isn't exported, promote it to `shared/` instead of reaching in.
+
+8. **No magic values.** Hardcoded strings or numbers used in more than one place must become named constants. URLs, query keys, route paths, storage keys, timeouts — all named. Single-use values can stay inline.
+
+9. **Extract on the third occurrence, not the first.** Do not pre-emptively create abstractions, wrappers, or generic utilities. Duplicate once, duplicate twice, extract on the third. Premature abstraction is worse than duplication.
+
+10. **Prefer composition over configuration.** A component with 8 boolean props is a component that should be 3 components. If a function has 5+ parameters or a component has 5+ props of different shapes, split it before adding the sixth.
+
+**Principle:** Boring, obvious code wins. If a senior engineer would call your solution "clever," rewrite it simpler. Prefer duplication to premature abstraction; prefer direct code to indirection.
 
 ## Commands
 
