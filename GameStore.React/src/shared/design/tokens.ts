@@ -33,15 +33,22 @@ export const palette = {
   neonBlue500: '#06b6d4',   // primary
   neonBlue600: '#0891b2',   // pressed
 
-  // Red (danger — brighter for dark bg)
-  red400: '#f87171',
+  // Red
+  red400: '#f87171',   // brighter — dark bg
   red500: '#ef4444',
+  red600: '#dc2626',   // darker  — light bg
 
-  // Green (success — brighter for dark bg)
-  green400: '#4ade80',
+  // Green
+  green400: '#4ade80',  // brighter — dark bg
+  green600: '#16a34a',  // darker  — light bg
 
-  // Amber (warning — brighter for dark bg)
-  amber400: '#fbbf24',
+  // Amber
+  amber400: '#fbbf24',  // brighter — dark bg
+  amber600: '#d97706',  // darker  — light bg
+
+  // Extra purple/cyan shades for light-mode contrast
+  neonPurple700: '#7e22ce',  // hover on light bg
+  neonBlue700:   '#0e7490',  // hover on light bg
 } as const
 
 export type PaletteKey = keyof typeof palette
@@ -98,6 +105,61 @@ export const colors = {
 
   // Focus ring — neon purple glow
   focusRing: palette.neonPurple400,
+} as const
+
+// ─── Light theme semantic tokens ──────────────────────────────────────────────
+// Mirrors `colors` structure but mapped to a white/light palette.
+// Neon accents are shifted one stop darker for WCAG AA contrast on white bg.
+
+export const lightColors = {
+  // Surfaces
+  background:    palette.white,        // pure white — user-specified
+  surface:       palette.white,        // cards match bg; border provides separation
+  surfaceSubtle: palette.slate50,      // #f8fafc — user-specified subtle grey
+
+  // Borders
+  border:        palette.slate200,     // #e2e8f0
+  borderStrong:  palette.slate300,     // #cbd5e1
+
+  // Text
+  textPrimary:   '#0f172a',            // near-black — user-specified
+  textSecondary: palette.slate500,     // #64748b
+  textMuted:     palette.slate400,     // #94a3b8
+  textOnAccent:  palette.white,
+
+  // Neon Purple — one stop darker (600/700) for AA contrast on white
+  accentPurple:           palette.neonPurple600,    // #9333ea  ~4.5:1 on white
+  accentPurpleHover:      palette.neonPurple700,    // #7e22ce
+  accentPurpleForeground: palette.white,
+  accentPurpleSubtle:     'rgb(168 85 247 / 0.08)',
+  accentPurpleBorder:     'rgb(168 85 247 / 0.20)',
+  accentPurpleMutedFg:    palette.neonPurple700,    // text on subtle bg
+
+  // Neon Blue / Cyan — one stop darker for AA contrast on white
+  accentBlue:           palette.neonBlue600,        // #0891b2  ~4.6:1 on white
+  accentBlueHover:      palette.neonBlue700,        // #0e7490
+  accentBlueForeground: palette.white,
+  accentBlueSubtle:     'rgb(6 182 212 / 0.08)',
+  accentBlueBorder:     'rgb(6 182 212 / 0.20)',
+  accentBlueMutedFg:    palette.neonBlue700,
+
+  // Danger
+  dangerRed:            palette.red600,             // #dc2626  ~5.9:1 on white
+  dangerRedHover:       '#b91c1c',
+  dangerRedForeground:  palette.white,
+  dangerRedSubtle:      'rgb(220 38 38 / 0.08)',
+  dangerRedBorder:      'rgb(220 38 38 / 0.20)',
+
+  // Success
+  successGreen:         palette.green600,           // #16a34a
+  successGreenSubtle:   'rgb(22 163 74 / 0.08)',
+
+  // Warning
+  warningAmber:         palette.amber600,           // #d97706
+  warningAmberSubtle:   'rgb(217 119 6 / 0.08)',
+
+  // Focus ring
+  focusRing:            palette.neonPurple500,      // #a855f7 — vivid ring on white
 } as const
 
 // ─── Spacing ──────────────────────────────────────────────────────────────────

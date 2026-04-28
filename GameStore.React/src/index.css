@@ -192,6 +192,65 @@
     --gs-focus-ring:          #c084fc;
 }
 
+/* ─── Light theme — toggled by ThemeProvider adding .light to <html> ──────── */
+.light {
+    /* Surfaces */
+    --gs-background:          #ffffff;   /* pure white — user-specified            */
+    --gs-surface:             #ffffff;   /* cards match bg; borders provide depth  */
+    --gs-surface-subtle:      #f8fafc;   /* slate-50  — user-specified subtle grey  */
+
+    /* Borders */
+    --gs-border:              #e2e8f0;   /* slate-200 */
+    --gs-border-strong:       #cbd5e1;   /* slate-300 */
+
+    /* Text */
+    --gs-text-primary:        #0f172a;   /* near-black — user-specified            */
+    --gs-text-secondary:      #64748b;   /* slate-500  */
+    --gs-text-muted:          #94a3b8;   /* slate-400  */
+    --gs-text-on-accent:      #ffffff;
+
+    /* Neon Purple — one stop darker for WCAG AA contrast on white (#9333ea ~4.5:1) */
+    --gs-accent-purple:           #9333ea;
+    --gs-accent-purple-hover:     #7e22ce;
+    --gs-accent-purple-fg:        #ffffff;
+    --gs-accent-purple-subtle:    rgb(168 85 247 / 0.08);
+    --gs-accent-purple-border:    rgb(168 85 247 / 0.20);
+    --gs-accent-purple-muted-fg:  #7e22ce;
+
+    /* Neon Blue / Cyan — one stop darker (#0891b2 ~4.6:1 on white) */
+    --gs-accent-blue:             #0891b2;
+    --gs-accent-blue-hover:       #0e7490;
+    --gs-accent-blue-fg:          #ffffff;
+    --gs-accent-blue-subtle:      rgb(6 182 212 / 0.08);
+    --gs-accent-blue-border:      rgb(6 182 212 / 0.20);
+    --gs-accent-blue-muted-fg:    #0e7490;
+
+    /* Danger (#dc2626 ~5.9:1 on white) */
+    --gs-danger-red:          #dc2626;
+    --gs-danger-red-hover:    #b91c1c;
+    --gs-danger-red-fg:       #ffffff;
+    --gs-danger-red-subtle:   rgb(220 38 38 / 0.08);
+    --gs-danger-red-border:   rgb(220 38 38 / 0.20);
+
+    /* Success */
+    --gs-success-green:       #16a34a;
+    --gs-success-green-subtle:rgb(22 163 74 / 0.08);
+
+    /* Warning */
+    --gs-warning-amber:       #d97706;
+    --gs-warning-amber-subtle:rgb(217 119 6 / 0.08);
+
+    /* Focus ring — vivid neon purple remains readable on white */
+    --gs-focus-ring:          #a855f7;
+
+    /* Chart — slightly muted for light bg */
+    --chart-1: #9333ea;
+    --chart-2: #0891b2;
+    --chart-3: #d97706;
+    --chart-4: #dc2626;
+    --chart-5: #16a34a;
+}
+
 /* ─── Base layer ─────────────────────────────────────────────────────────── */
 @layer base {
   * {
