@@ -95,3 +95,7 @@ Validation is enabled globally via `builder.Services.AddValidation()`.
 | Verb | Route     | Notes                                                     |
 | ---- | --------- | --------------------------------------------------------- |
 | GET  | `/genres` | Projects all genres to `GenreDto`, uses `.AsNoTracking()` |
+
+## Lessons
+
+- **Image upload validates only filename extension and Content-Type header — not magic bytes**: a malicious client can spoof both. Acceptable for local/learning use; add magic-byte validation before any production deployment.
