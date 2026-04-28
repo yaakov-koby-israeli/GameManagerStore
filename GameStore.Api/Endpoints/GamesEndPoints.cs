@@ -131,7 +131,9 @@ public static class GamesEndPoints
             return Results.NotFound();
 
         return Results.Ok(new { message = "Validation passed — file save not yet implemented" });
-    });
+    })
+    // No CSRF protection needed — API uses no cookie-based auth.
+    .DisableAntiforgery();
   }
 
 }

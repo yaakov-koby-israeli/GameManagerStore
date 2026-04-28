@@ -30,3 +30,15 @@ GET http://localhost:5090/games/3
 
 ###
  GET http://localhost:5090/genres
+
+### Upload image to game 1
+POST http://localhost:5090/games/1/image
+Content-Type: multipart/form-data; boundary=MyBoundary
+
+--MyBoundary
+Content-Disposition: form-data; name="file"; filename="cover.png"
+Content-Type: image/png
+
+< C:\Users\User\Downloads\cover.png
+--MyBoundary--
+
