@@ -8,7 +8,11 @@ namespace GameStore.Api.Endpoints;
 public static class GamesEndPoints
 {
 
-  const string GetGameEndpointName = "GetGameById"; 
+  private const long MaxImageBytes = 5 * 1024 * 1024;
+  private static readonly string[] AllowedImageTypes = ["image/jpeg", "image/png", "image/webp"];
+  private static readonly string[] AllowedImageExtensions = [".jpg", ".jpeg", ".png", ".webp"];
+
+  const string GetGameEndpointName = "GetGameById";
 
   public static void MapGamesEndPoints(this WebApplication app)
   {
@@ -96,14 +100,37 @@ public static class GamesEndPoints
 
     // DELETE /games/1
     group.MapDelete("/{id}" , async (
-        int id, 
+        int id,
         GameStoreContext dbContext) =>
     {
         await dbContext.Games
                        .Where(game => game.Id == id)
-                       .ExecuteDeleteAsync(); 
+                       .ExecuteDeleteAsync();
 
         return Results.NoContent();
+    });
+
+    // POST /games/{id}/image
+    group.MapPost("/{id:int}/image", async (int id, IFormFile file, GameStoreContext dbContext) =>
+    {
+        if (file is null || file.Length == 0)
+            return Results.BadRequest(new { message = "File is required" });
+
+        if (file.Length > MaxImageBytes)
+            return Results.BadRequest(new { message = "File exceeds 5 MB limit" });
+
+        if (!AllowedImageTypes.Contains(file.ContentType))
+            return Results.BadRequest(new { message = "Unsupported file type. Allowed: jpeg, png, webp" });
+
+        if (!AllowedImageExtensions.Contains(Path.GetExtension(file.FileName).ToLowerInvariant()))
+            return Results.BadRequest(new { message = "Unsupported file extension" });
+
+        var game = await dbContext.Games.FindAsync(id);
+
+        if (game is null)
+            return Results.NotFound();
+
+        return Results.Ok(new { message = "Validation passed — file save not yet implemented" });
     });
   }
 
