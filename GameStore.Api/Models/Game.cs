@@ -14,4 +14,6 @@ public class Game
 
   public DateOnly ReleaseDate {get; set; }
 
+  public string? ImageUrl {get; set; }
+
 }
