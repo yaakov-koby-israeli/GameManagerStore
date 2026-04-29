@@ -39,6 +39,6 @@ Content-Type: multipart/form-data; boundary=MyBoundary
 Content-Disposition: form-data; name="file"; filename="cover.png"
 Content-Type: image/png
 
-< C:\Users\User\Downloads\cover.png
+< C:\Users\User\Downloads\MarioBrosWonder.jpg
 --MyBoundary--
 

@@ -141,6 +141,23 @@ public static class GamesEndPoints
             await file.CopyToAsync(stream);
         }
 
+        if (!string.IsNullOrEmpty(game.ImageUrl))
+        {
+            var oldRelative = game.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+            var oldFullPath = Path.Combine(env.ContentRootPath, "wwwroot", oldRelative);
+            try
+            {
+                if (File.Exists(oldFullPath))
+                {
+                    File.Delete(oldFullPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                app.Logger.LogWarning(ex, "Failed to delete old image at {Path}", oldFullPath);
+            }
+        }
+
         game.ImageUrl = $"/uploads/games/{filename}";
         await dbContext.SaveChangesAsync();
 
