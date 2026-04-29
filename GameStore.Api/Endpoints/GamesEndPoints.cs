@@ -111,7 +111,7 @@ public static class GamesEndPoints
     });
 
     // POST /games/{id}/image
-    group.MapPost("/{id:int}/image", async (int id, IFormFile file, GameStoreContext dbContext) =>
+    group.MapPost("/{id:int}/image", async (int id, IFormFile file, GameStoreContext dbContext, IWebHostEnvironment env) =>
     {
         if (file is null || file.Length == 0)
             return Results.BadRequest(new { message = "File is required" });
@@ -130,7 +130,21 @@ public static class GamesEndPoints
         if (game is null)
             return Results.NotFound();
 
-        return Results.Ok(new { message = "Validation passed — file save not yet implemented" });
+        var folder = Path.Combine(env.ContentRootPath, "wwwroot", "uploads", "games");
+        Directory.CreateDirectory(folder);
+
+        var filename = $"{Guid.NewGuid():N}{Path.GetExtension(file.FileName).ToLowerInvariant()}";
+        var fullPath = Path.Combine(folder, filename);
+
+        using (var stream = new FileStream(fullPath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        game.ImageUrl = $"/uploads/games/{filename}";
+        await dbContext.SaveChangesAsync();
+
+        return Results.Ok(new GameDetailsDto(game.Id, game.Name, game.GenreId, game.Price, game.ReleaseDate));
     })
     // No CSRF protection needed — API uses no cookie-based auth.
     .DisableAntiforgery();
