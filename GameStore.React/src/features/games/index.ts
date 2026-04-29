@@ -1,5 +1,5 @@
 export type { GameSummaryDto, GameDetailsDto, CreateGameDto, UpdateGameDto } from './types';
-export { useGames, useGame, useCreateGame, useUpdateGame, useDeleteGame } from './api/gamesApi';
+export { useGames, useGame, useCreateGame, useUpdateGame, useUploadGameImage, useDeleteGame } from './api/gamesApi';
 export { GameList } from './components/GameList';
 export { GameDetail } from './components/GameDetail';
 export { GameForm } from './components/GameForm';
