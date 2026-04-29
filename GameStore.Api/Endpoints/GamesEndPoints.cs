@@ -28,7 +28,8 @@ public static class GamesEndPoints
                             game.Name,
                             game.Genre!.Name,// the ! is to ignore compiler nullable warning
                             game.Price,
-                            game.ReleaseDate
+                            game.ReleaseDate,
+                            game.ImageUrl
                           ))
                           .AsNoTracking() // tell .net to not keep track of th entites - better performence
                           .ToListAsync());
@@ -44,7 +45,8 @@ public static class GamesEndPoints
             game.Name,
             game.GenreId,
             game.Price,
-            game.ReleaseDate
+            game.ReleaseDate,
+            game.ImageUrl
             )
         );
     })
@@ -69,7 +71,8 @@ public static class GamesEndPoints
             game.Name,
             game.GenreId,
             game.Price,
-            game.ReleaseDate
+            game.ReleaseDate,
+            game.ImageUrl
         );
 
         return Results.CreatedAtRoute(GetGameEndpointName, new {id = gameDto.Id}, gameDto);
@@ -184,7 +187,7 @@ public static class GamesEndPoints
         game.ImageUrl = $"/uploads/games/{filename}";
         await dbContext.SaveChangesAsync();
 
-        return Results.Ok(new GameDetailsDto(game.Id, game.Name, game.GenreId, game.Price, game.ReleaseDate));
+        return Results.Ok(new GameDetailsDto(game.Id, game.Name, game.GenreId, game.Price, game.ReleaseDate, game.ImageUrl));
     })
     // No CSRF protection needed — API uses no cookie-based auth.
     .DisableAntiforgery();

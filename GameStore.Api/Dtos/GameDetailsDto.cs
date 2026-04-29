@@ -7,5 +7,6 @@ public record GameDetailsDto(
   string Name,
   int Genre,
   decimal Price,
-  DateOnly ReleaseDate
+  DateOnly ReleaseDate,
+  string? ImageUrl
 );
