@@ -99,13 +99,36 @@ public static class GamesEndPoints
     });
 
     // DELETE /games/1
+    // Loads the row first (instead of ExecuteDeleteAsync) to read ImageUrl for file cleanup.
     group.MapDelete("/{id}" , async (
         int id,
-        GameStoreContext dbContext) =>
+        GameStoreContext dbContext,
+        IWebHostEnvironment env) =>
     {
-        await dbContext.Games
-                       .Where(game => game.Id == id)
-                       .ExecuteDeleteAsync();
+        var game = await dbContext.Games.FindAsync(id);
+
+        if (game is null)
+            return Results.NotFound();
+
+        if (!string.IsNullOrEmpty(game.ImageUrl))
+        {
+            var oldRelative = game.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+            var oldFullPath = Path.Combine(env.ContentRootPath, "wwwroot", oldRelative);
+            try
+            {
+                if (File.Exists(oldFullPath))
+                {
+                    File.Delete(oldFullPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                app.Logger.LogWarning(ex, "Failed to delete image at {Path}", oldFullPath);
+            }
+        }
+
+        dbContext.Games.Remove(game);
+        await dbContext.SaveChangesAsync();
 
         return Results.NoContent();
     });
