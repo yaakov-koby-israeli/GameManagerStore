@@ -4,6 +4,7 @@ export interface GameSummaryDto {
   genre: string; // resolved genre name from GET /games
   price: number;
   releaseDate: string;
+  imageUrl: string | null;
 }
 
 export interface GameDetailsDto {
@@ -12,6 +13,7 @@ export interface GameDetailsDto {
   genre: number; // genreId — cross-reference GET /genres to get the name
   price: number;
   releaseDate: string;
+  imageUrl: string | null;
 }
 
 // Shared shape for POST /games and PUT /games/:id
