@@ -50,6 +50,12 @@ No test project exists yet. The `games.http` file contains sample HTTP requests 
 
 ASP.NET Core 10 Minimal API backed by **SQLite via Entity Framework Core 10**.
 
+### Middleware pipeline (`Program.cs`)
+
+Registered in order: `AddCustomCors()` (from `Configurations/CorsServiceExtensions.cs`) → `AddValidation()` → `AddGameStoreDb()` → `UseCors()` → `UseStaticFiles()` → `MapGamesEndPoints()` → `MapGenresEndpoints()` → `MigrateDb()`.
+
+`UseStaticFiles()` serves `wwwroot/` over HTTP. Uploaded images land in `wwwroot/uploads/games/` (git-ignored) and are reachable at `/uploads/games/{filename}`.
+
 ### Data layer (`Data/`)
 
 - **`GameStoreContext`** — EF Core `DbContext` with two `DbSet`s: `Games` (`Game`) and `Genre` (`Genre`).
@@ -61,17 +67,17 @@ ASP.NET Core 10 Minimal API backed by **SQLite via Entity Framework Core 10**.
 
 ### Models (`Models/`)
 
-| Class   | Key properties                                                       |
-| ------- | -------------------------------------------------------------------- |
-| `Game`  | `Id`, `Name`, `GenreId` (FK), `Genre?` (nav), `Price`, `ReleaseDate` |
-| `Genre` | `Id`, `Name`                                                         |
+| Class   | Key properties                                                                        |
+| ------- | ------------------------------------------------------------------------------------- |
+| `Game`  | `Id`, `Name`, `GenreId` (FK), `Genre?` (nav), `Price`, `ReleaseDate`, `ImageUrl?`    |
+| `Genre` | `Id`, `Name`                                                                          |
 
 ### DTOs (`Dtos/`)
 
 | Record           | Purpose                                                                                |
 | ---------------- | -------------------------------------------------------------------------------------- |
-| `GameSummaryDto` | List response — includes resolved `Genre` name (string)                                |
-| `GameDetailsDto` | Single-item response — uses `GenreId` (int)                                            |
+| `GameSummaryDto` | List response — includes resolved `Genre` name (string) and `ImageUrl?`               |
+| `GameDetailsDto` | Single-item response — uses `GenreId` (int) and `ImageUrl?`                           |
 | `CreateGameDto`  | POST body — has DataAnnotations validation (`[Required]`, `[StringLength]`, `[Range]`) |
 | `UpdateGameDto`  | PUT body — same shape as `CreateGameDto`, no `Id`                                      |
 | `GenreDto`       | Genre list response                                                                    |
@@ -82,13 +88,14 @@ Validation is enabled globally via `builder.Services.AddValidation()`.
 
 **`GamesEndPoints`** (`/games`) — extension method `MapGamesEndPoints`:
 
-| Verb   | Route         | Notes                                                                              |
-| ------ | ------------- | ---------------------------------------------------------------------------------- |
-| GET    | `/games`      | Joins `Genre` via `.Include`, projects to `GameSummaryDto`, uses `.AsNoTracking()` |
-| GET    | `/games/{id}` | `FindAsync` by id, returns `GameDetailsDto`; named route `GetGameById`             |
-| POST   | `/games`      | Inserts new `Game`, returns `201 CreatedAtRoute` with `GameDetailsDto`             |
-| PUT    | `/games/{id}` | Updates fields + `SaveChangesAsync`, returns `204`                                 |
-| DELETE | `/games/{id}` | `ExecuteDeleteAsync` (no load needed), returns `204`                               |
+| Verb   | Route              | Notes                                                                                                      |
+| ------ | ------------------ | ---------------------------------------------------------------------------------------------------------- |
+| GET    | `/games`           | Joins `Genre` via `.Include`, projects to `GameSummaryDto` (incl. `ImageUrl`), uses `.AsNoTracking()`     |
+| GET    | `/games/{id}`      | `FindAsync` by id, returns `GameDetailsDto` (incl. `ImageUrl`); named route `GetGameById`                 |
+| POST   | `/games`           | Inserts new `Game`, returns `201 CreatedAtRoute` with `GameDetailsDto`                                     |
+| PUT    | `/games/{id}`      | Updates fields + `SaveChangesAsync`, returns `204`                                                         |
+| DELETE | `/games/{id}`      | Loads game first (`FindAsync`), deletes image file from disk if present, then removes row; returns `404` if not found, `204` on success |
+| POST   | `/games/{id}/image`| `multipart/form-data`, field `file`; validates size (≤5 MB), content-type, extension; saves to `wwwroot/uploads/games/{guid}.ext`; deletes old image if replacing; updates `Game.ImageUrl`; returns `GameDetailsDto`. `.DisableAntiforgery()` applied. |
 
 **`GenresEndpoints`** (`/genres`) — extension method `MapGenresEndpoints`:
 
@@ -99,3 +106,5 @@ Validation is enabled globally via `builder.Services.AddValidation()`.
 ## Lessons
 
 - **Image upload validates only filename extension and Content-Type header — not magic bytes**: a malicious client can spoof both. Acceptable for local/learning use; add magic-byte validation before any production deployment.
+- **DELETE loads before deleting (not `ExecuteDeleteAsync`)**: needed to read `ImageUrl` for file cleanup. Acceptable cost; documented as an intentional deviation from Rule 5.
+- **`IFormFile` endpoints require `.DisableAntiforgery()`** in Minimal APIs when no cookie-based auth is used — without it the runtime throws a 500 on every upload request.

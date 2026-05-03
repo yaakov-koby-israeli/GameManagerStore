@@ -8,6 +8,8 @@
 - Client State: Zustand
 - Forms: React Hook Form + Zod
 - Styling: Tailwind CSS + shadcn/ui
+- Animations: framer-motion
+- Toasts: sonner
 
 ## Backend Contract
 
@@ -22,6 +24,10 @@ We use a feature-based architecture:
 - `src/app/`: app shell, providers (QueryClient, Router), main.tsx
 - `src/features/`: domain-specific modules (e.g., games, genres).
 - `src/shared/`: generic api client, ui primitives, utilities, hooks.
+  - `src/shared/api/`: `client.ts` — exports `apiClient` and `BASE_URL`.
+  - `src/shared/context/`: React contexts (e.g., `ThemeContext`).
+  - `src/shared/components/`: reusable UI components (e.g., `ThemeToggle`).
+  - `src/shared/design/`: design tokens (`tokens.ts`).
 
 ## Rules
 
@@ -68,3 +74,8 @@ We use a feature-based architecture:
 - **TypeScript 6 deprecated `baseUrl`**: do not add `baseUrl` to any tsconfig; use `paths` alone for the `@/*` alias — Vite's `resolve.alias` handles runtime resolution independently.
 - **`<button>` elements do not get `cursor: pointer` automatically**: add it to the `buttonVariants` base class in `src/components/ui/button.tsx` so every button-styled element (including Base UI trigger primitives) inherits it.
 - **Route order matters: `/games/new` must be registered before `/games/:id`**: React Router v7 matches top-down; if `:id` comes first, the string `"new"` is treated as a game ID.
+- **`setState` synchronously inside `useEffect` triggers `react-hooks/set-state-in-effect`**: co-locate the flag and its key in one state object and derive staleness from props instead — e.g. `const stale = state.url !== prop.url` — no `useEffect` needed and no cascade render.
+- **Base UI `SelectValue` does not auto-resolve item labels from a closed popup**: use the `children` render function to look up the label yourself: `<SelectValue>{(value) => genres.find(g => String(g.id) === value)?.name ?? <span>placeholder</span>}</SelectValue>`.
+- **Date input calendar icon is invisible on dark backgrounds**: add `color-scheme: dark` to `input[type="date"]` in `@layer base` — it is the only CSS lever that recolours native UA form controls.
+- **Sonner `theme="dark"` sets its own inline styles that outrank class selectors**: use the `!` prefix (`!bg-[...]`) on all `toastOptions.classNames` values to apply `!important`; without it, Sonner's inline styles win the cascade regardless of specificity.
+- **`AnimatePresence initial={false}` prevents spurious entrance animations**: without it, the child already mounted on first render runs through the `enter` variant, causing an unwanted slide-in on page load.
