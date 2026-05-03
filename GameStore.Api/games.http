@@ -8,9 +8,9 @@ GET http://localhost:5090/games/2
  Content-Type: application/json
 
  {
-   "name": "test",
-   "genreId": 1,
-   "price": 9.99,
+   "name": "Super Mario Bros. Wonder",
+   "genreId": 3,
+   "price": 100,
    "releaseDate": "1991-10-20"
  }
 
@@ -19,26 +19,26 @@ GET http://localhost:5090/games/2
  Content-Type: application/json
 
  {
-   "name": "Street Fighter I Turbo",
-   "genreId": 1,
+   "name": "Super Mario Bros. Wonder",
+   "genreId": 3,
    "price": 19.99,
    "releaseDate": "1991-10-20"
  }
 
 ###
- DELETE http://localhost:5090/games/999
+ DELETE http://localhost:5090/games/18
 
 ###
  GET http://localhost:5090/genres
 
 ### Upload image to game 1
-POST http://localhost:5090/games/1/image
+POST http://localhost:5090/games/19/image
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
 Content-Disposition: form-data; name="file"; filename="cover.png"
 Content-Type: image/png
 
-< "C:\Users\User\Downloads\MarioBrosWonder.jpg"
+< C:\Users\User\Downloads\MarioBrosWonder.jpg
 --MyBoundary--
 
