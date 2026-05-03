@@ -1,4 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { Gamepad2 } from 'lucide-react';
+import { BASE_URL } from '@/shared/api/client';
 import {
   Table,
   TableBody,
@@ -73,7 +75,20 @@ export function GameList({ games, hasActiveFilters }: GameListProps) {
             className="cursor-pointer hover:bg-accent"
           >
             <TableCell className="py-3.5 pl-4">
-              <span className="font-medium text-foreground">{game.name}</span>
+              <div className="flex items-center gap-3">
+                {game.imageUrl ? (
+                  <img
+                    src={`${BASE_URL}${game.imageUrl}`}
+                    alt=""
+                    className="w-10 h-10 rounded-full object-cover border border-border shrink-0"
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-muted border border-border flex items-center justify-center shrink-0">
+                    <Gamepad2 className="size-5 text-muted-foreground" />
+                  </div>
+                )}
+                <span className="font-medium text-foreground">{game.name}</span>
+              </div>
             </TableCell>
             <TableCell className="py-3.5 text-muted-foreground">{game.genre}</TableCell>
             <TableCell className="py-3.5 tabular-nums">{formatPrice(game.price)}</TableCell>
