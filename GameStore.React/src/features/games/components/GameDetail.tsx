@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Gamepad2 } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { BASE_URL } from '@/shared/api/client';
 import { useGenres } from '@/features/genres';
 import type { GameDetailsDto } from '../types';
 import { DeleteGameButton } from './DeleteGameButton';
@@ -25,6 +28,12 @@ export function GameDetail({ game }: GameDetailProps) {
   const navigate = useNavigate();
   const { data: genres } = useGenres();
   const genreName = genres?.find((g) => g.id === game.genre)?.name ?? '…';
+
+  // Fall back to the placeholder if the image URL fails to load.
+  // Storing the url alongside the flag means the error is automatically
+  // treated as stale when imageUrl changes — no useEffect reset needed.
+  const [imgState, setImgState] = useState({ url: game.imageUrl, failed: false });
+  const imgFailed = imgState.url === game.imageUrl && imgState.failed;
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
@@ -57,6 +66,21 @@ export function GameDetail({ game }: GameDetailProps) {
 
       {/* Detail card */}
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
+        {/* Game avatar — centred above the title */}
+        <div className="flex justify-center mb-6">
+          {game.imageUrl && !imgFailed ? (
+            <img
+              src={`${BASE_URL}${game.imageUrl}`}
+              alt={game.name}
+              className="w-32 h-32 rounded-full object-cover border border-border"
+              onError={() => setImgState({ url: game.imageUrl, failed: true })}
+            />
+          ) : (
+            <div className="w-32 h-32 rounded-full bg-muted flex items-center justify-center">
+              <Gamepad2 className="size-12 text-muted-foreground" />
+            </div>
+          )}
+        </div>
         <h1 className="text-2xl font-semibold tracking-tight mb-6">{game.name}</h1>
         <dl className="grid grid-cols-[max-content_1fr] gap-x-8 gap-y-3 text-sm">
           <dt className="text-muted-foreground self-center">Genre</dt>
