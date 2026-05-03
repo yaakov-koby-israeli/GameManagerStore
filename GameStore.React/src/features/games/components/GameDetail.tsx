@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Gamepad2 } from 'lucide-react';
+import { Gamepad2, ImagePlus } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { BASE_URL } from '@/shared/api/client';
 import { useGenres } from '@/features/genres';
 import type { GameDetailsDto } from '../types';
+import { useUploadGameImage } from '../api/gamesApi';
 import { DeleteGameButton } from './DeleteGameButton';
 
 const formatPrice = (price: number) =>
@@ -35,6 +36,16 @@ export function GameDetail({ game }: GameDetailProps) {
   const [imgState, setImgState] = useState({ url: game.imageUrl, failed: false });
   const imgFailed = imgState.url === game.imageUrl && imgState.failed;
 
+  const { mutate: uploadImage, isPending: isUploading } = useUploadGameImage(game.id);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) uploadImage(file);
+    // Reset so selecting the same file again fires onChange.
+    e.target.value = '';
+  }
+
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       {/* Header row */}
@@ -56,6 +67,29 @@ export function GameDetail({ game }: GameDetailProps) {
           >
             Edit
           </Link>
+
+          {/* Hidden file input — triggered by the button below */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            className="hidden"
+            onChange={handleFileChange}
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isUploading}
+            className={cn(
+              buttonVariants({ variant: 'ghost' }),
+              'bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary',
+              'focus-visible:border-primary/40 focus-visible:ring-primary/20',
+            )}
+          >
+            <ImagePlus className="size-4" />
+            {isUploading ? 'Uploading…' : game.imageUrl ? 'Replace picture' : '+ Add picture'}
+          </button>
+
           <DeleteGameButton
             gameId={game.id}
             gameName={game.name}
